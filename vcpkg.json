@@ -1,8 +1,5 @@
 {
-  "name": "sections-of-cpp",
+  "name": "cpp-one-config-many-platforms",
   "version-string": "1.0",
-  "dependencies": [
-    "eigen3",
-    "gtest"
-  ]
+  "dependencies": ["eigen3", "gtest"]
 }

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project (sections-of-cpp CXX)
+project (cpp-one-config-many-platforms CXX)
 
 include(CTest)
 
