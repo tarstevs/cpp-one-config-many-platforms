@@ -1,0 +1,42 @@
+
+name: build-mac
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build-application-mac"
+  build-application-mac:
+    # The type of runner that the job will run on
+    runs-on: macOS-latest
+    # Steps are the individual actions/tasks that will be executed for each job
+    steps:
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Usually this is always needed
+      - uses: actions/checkout@v2
+
+      # After all of the above, we are on Mac in the root directory of our sections-of-cpp project.
+      # The repo has been cloned, but nothing more has been done. So our first task now will be to pull
+      # data for the vcpkg submodule which is empty after a normal git clone.
+      - name: Load-vcpkg
+        run: |
+          git submodule init
+          git submodule update
+      - name: Install Dependencies
+        run: |
+          brew install pkg-config
+          brew install ninja
+      # We are using the vcpkg manifest mode, and since `CMAKE_TOOLCHAIN_FILE` (holding the path to vcpkg.cmake)
+      # is set in CMakePresets.txt, we can execute the command line cmake build without passing an argument telling
+      # CMAKE where to find vcpkg.cmake.
+      - name: Build-Application
+        run: |
+          cmake --preset=mac-debug
+          cmake --build --preset=build-mac-debug

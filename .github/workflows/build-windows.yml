@@ -1,0 +1,46 @@
+
+name: build-windows
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build-application-windows"
+  build-application-windows:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+    # Steps are the individual actions/tasks that will be executed for each job
+    steps:
+
+      # Configure and build on Windows with Ninja and cl
+      - name: Set up Windows with Ninja and cl
+        uses: ilammy/msvc-dev-cmd@v1  
+        with:
+          arch: 'x64'
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Usually this is always needed
+      - name: Checkout project repo
+        uses: actions/checkout@v2
+
+      # After all of the above, we are on Windows in the root directory of our sections-of-cpp project.
+      # The repo has been cloned, but nothing more has been done. So our first task now will be to pull
+      # data for the vcpkg submodule which is empty after a normal git clone.
+      - name: Load-vcpkg
+        run: |
+          git submodule init
+          git submodule update
+
+      # We are using the vcpkg manifest mode, and since `CMAKE_TOOLCHAIN_FILE` (holding the path to vcpkg.cmake)
+      # is set in CMakePresets.txt, we can execute the command line cmake build without passing an argument telling
+      # CMAKE where to find vcpkg.cmake.
+      - name: Build-Application
+        run: |
+          cmake --preset=windows-debug
+          cmake --build --preset=build-windows-debug
