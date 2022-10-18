@@ -13,7 +13,7 @@ There more individualized requirements appear in each platforms' getting started
 
 ## Getting Started
 
-### Linux Setup
+### Linux Setup 
 
 What follows assumes you have done the following (or equivalent, depending on your Linux distribution):
 
